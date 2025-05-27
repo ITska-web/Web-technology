@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h1 class="display-4 mb-3">{{ video.title }}</h1>
+                    <p class="lead">{{ video.description }}</p>
+                    
+                    <div class="video-container mb-4">
+                        <video width="100%" controls class="rounded-lg">
+                            <source src="{{ url_for('uploaded_file', filename=video.filename) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <form method="POST" action="{{ url_for('like', video_id=video.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="fas fa-heart mr-2"></i>{{ likes }} Likes
+                            </button>
+                        </form>
+                        <span class="text-muted">Uploaded by {{ video.author.username }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="mb-4"><i class="fas fa-comments mr-2"></i>Comments</h3>
+                    
+                    {% if request.cookies.get('token') %}
+                        <form method="POST" action="{{ url_for('comment', video_id=video.id) }}" class="mb-4">
+                            <div class="form-group">
+                                <textarea class="form-control form-control-lg" name="content" rows="3" placeholder="Add a comment..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </form>
+                    {% endif %}
+
+                    {% for comment in comments %}
+                        <div class="card bg-dark mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="card-subtitle mb-0">
+                                        <i class="fas fa-user-circle mr-2"></i>{{ comment.author.username }}
+                                    </h6>
+                                    <small class="text-muted">{{ comment.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <p class="card-text">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

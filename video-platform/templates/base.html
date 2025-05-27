@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Video Hosting{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="https://i.postimg.cc/d1h0t0fw/logo.png" type="image/png">
+    <style>
+        body {
+            background-image: url("https://i.ibb.co/dJB4X567/background.png");
+            background-repeat: repeat;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            background-position: center;
+            transition: background-position 0.3s ease-out;
+            background-size: 120%;
+        }
+        
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Остальные стили остаются без изменений */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            color: #fff;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-control, .form-control-file {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+        }
+        
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: #ff4757;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff6b81;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 75, 87, 0.4);
+        }
+        
+        .btn-outline-danger {
+            color: #ff4757;
+            border-color: #ff4757;
+            border-radius: 50px;
+        }
+        
+        .btn-outline-danger:hover {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        video {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .alert {
+            border-radius: 10px;
+        }
+        
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="https://i.postimg.cc/d1h0t0fw/logo.png" alt="Video Camera Icon">
+                VideoHost
+            </a>
+            <div class="navbar-nav ml-auto">
+                {% if request.cookies.get('token') %}
+                    <a class="nav-item nav-link" href="{{ url_for('upload') }}"><i class="fas fa-upload mr-1"></i> Upload</a>
+                    <a class="nav-item nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt mr-1"></i> Logout</a>
+                {% else %}
+                    <a class="nav-item nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt mr-1"></i> Login</a>
+                    <a class="nav-item nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus mr-1"></i> Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            const sensitivity = 30;
+            
+            $(document).mousemove(function(e) {
+                const mouseX = e.pageX;
+                const mouseY = e.pageY;
+                
+                const bgX = 50 - (mouseX / $(window).width()) * sensitivity;
+                const bgY = 50 - (mouseY / $(window).height()) * sensitivity;
+                
+                $('body').css('background-position', bgX + '% ' + bgY + '%');
+            });
+        });
+    </script>
+</body>
+</html>

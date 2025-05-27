@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h1 class="card-title text-center mb-4">Upload Video</h1>
+                    <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="title"><i class="fas fa-heading mr-2"></i>Title</label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title" placeholder="Enter video title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description"><i class="fas fa-align-left mr-2"></i>Description</label>
+                            <textarea class="form-control form-control-lg" id="description" name="description" rows="3" placeholder="Add a description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="file"><i class="fas fa-video mr-2"></i>Video File</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file" name="file" required>
+                                <label class="custom-file-label" for="file">Choose file...</label>
+                            </div>
+                            <small class="form-text text-muted">Allowed formats: mp4, webm, ogg</small>
+                        </div>
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Upload Video</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+            var fileName = document.getElementById("file").files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    </script>
+{% endblock %}

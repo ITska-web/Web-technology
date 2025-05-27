@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="text-center mb-5">
+        <h1 class="display-4 font-weight-bold">Latest Videos</h1>
+        <p class="lead">Discover amazing content from our community</p>
+    </div>
+    <div class="row">
+        {% for video in videos %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-img-top">
+                        <video width="100%" controls>
+                            <source src="{{ url_for('uploaded_file', filename=video.filename) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ video.title }}</h5>
+                        <p class="card-text text-muted">{{ video.description|truncate(100) }}</p>
+                        <div class="mt-auto">
+                            <a href="{{ url_for('video', video_id=video.id) }}" class="btn btn-primary btn-block">Watch Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
